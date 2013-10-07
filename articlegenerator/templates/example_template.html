@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Test Page</title>
+    </head>
+<body>
+{{ name }}
+
+{{ version }}
+
+{{ iso.name }}
+
+{% for rpm in rpms %}
+
+{{rpm.module_name}} {{rpm.version}}
+
+{% endfor %}
+
+</body>
+</html>
