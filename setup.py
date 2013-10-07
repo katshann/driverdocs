@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup, find_packages
 
-setup(name='AutoDocs',
+setup(name='driverdocs',
       version='0.0.1',
       author='Rob Dobson',
-      packages=['driverfiles'],
+      packages=find_packages(),
+      package_data={'': ['*.html']},
+      include_package_data=True,
+      install_requires=[],
       )
