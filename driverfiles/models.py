@@ -21,7 +21,7 @@ class FileObject(object):
     def get_contents(self):
         return utils.read_file(self.fileloc)
 
-    def get_MD5(self):
+    def get_md5(self):
         fh = open(self.fileloc)
         try:
             md5sum = utils.md5_for_file(fh)
