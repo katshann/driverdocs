@@ -67,7 +67,7 @@ class BinaryFileObjectsTests(unittest.TestCase):
 
     def test_verify_md5(self):
         bf = models.BinaryFile(self.TEST_FILE)
-        md5sum = bf.get_MD5()
+        md5sum = bf.get_md5()
         assert_equal(self.md5_truth, md5sum)
 
     def test_verify_filename(self):
@@ -157,7 +157,7 @@ class TestDriverRepoPackage(unittest.TestCase):
         fh = open(iso.get_loc())
         truth_md5 = utils.md5_for_file(fh)
         fh.close()
-        assert_equal(truth_md5, iso.get_MD5())
+        assert_equal(truth_md5, iso.get_md5())
 
     def test_get_zip(self):
         drp = models.DriverRepoPackage(self.directory)
