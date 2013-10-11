@@ -166,7 +166,7 @@ class TestDriverRepoPackage(unittest.TestCase):
     
     def test_get_metadata_md5(self):
         drp = models.DriverRepoPackage(self.directory)
-        metadata_md5 = drp.get_metadata_md5()
+        metadata_md5 = drp.get_metadata_file().get_contents()
         assert_equal(self.sample_data['metadata_md5'], metadata_md5)
         
     def test_verify_driver_versions(self):

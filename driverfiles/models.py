@@ -156,8 +156,8 @@ class DriverRepoPackage(object):
     def get_ctx(self):
         return self.attrs.group('ctx')
 
-    def get_metadata_md5(self):
-        return self.metadata_file.get_contents()
+    def get_metadata_file(self):
+        return self.metadata_file
 
     def get_rpms(self):
         driver_rpms = []
