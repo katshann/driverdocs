@@ -65,8 +65,8 @@ class MockDriverRepoPackage(DriverRepoPackage):
     def get_ctx(self):
         return self.mock_rec['ctx']   
     
-    def get_metadata_md5(self):
-        return self.mock_rec['metadata_md5']
+    def get_metadata_file(self):
+        return MockBinaryFile(self.mock_rec['metadata_file'])
 
     def get_rpms(self):
         driver_rpms = []

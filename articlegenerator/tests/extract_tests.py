@@ -53,7 +53,13 @@ class DriverRepoDataSourceTests(unittest.TestCase):
                                 'filesize': '59693',
                                },
                         'ctx': 'CTXTestNumber',
-                        'metadata_md5': 'metadata_md5',
+                        'metadata_file': {
+                                           'filename': 'test.metadata.md5',
+                                           'fileloc': '/tmp/test.metadata.md5',
+                                           'data': '23523582358235235',
+                                           'md5': 'asdfasdfasdf',
+                                           'filesize': '124124',
+                                         },
                         'driver_rpms': [
                                         {
                                           'filename':'test-rpm-1.rpm',
@@ -111,7 +117,8 @@ class DriverRepoDataSourceTests(unittest.TestCase):
         self.assertEqual(data['zip']['md5'], mock_data['zip']['md5'])
 
         self.assertEqual(data['kernel_version'], mock_data['kernel_version'])
-        self.assertEqual(data['metadata_md5'], mock_data['metadata_md5'])
+        self.assertEqual(data['metadata_file']['filename'], mock_data['metadata_file']['filename'])
+        self.assertEqual(data['metadata_file']['data'], mock_data['metadata_file']['data'])
 
         #Verify RPM data
         assert len(mock_data['driver_rpms']) + \

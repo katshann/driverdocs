@@ -48,8 +48,12 @@ class DriverRepoDataSource(ArticleDataSource):
         # Get kernel version
         data_rec['kernel_version'] = drp.get_kernel_version()
 
-        # Get metadata md5
-        data_rec['metadata_md5'] = drp.get_metadata_md5()
+        metadata = drp.get_metadata_file()
+        # Get metadata file
+        data_rec['metadata_file'] = {
+                                      'filename': metadata.get_filename(),
+                                      'data': metadata.get_contents(),
+                                    }
 
         # Get RPM information
         rpm_data = []
