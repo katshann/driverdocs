@@ -6,7 +6,7 @@ from driverfiles.models import *
 class ArticleDataSource(object):
     """A base class for obtaining data to fill out an article template"""
 
-    data = None
+    data = {}
     
     def __init__(self, data=None):
         if data:
