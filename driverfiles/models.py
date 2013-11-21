@@ -91,7 +91,8 @@ class DriverRepoPackage(object):
     for a particular driver disk spin in a driverdisks.hg
     package."""
 
-    pattern = r'kb-(?P<ctx>CTX[0-9]+)\-(?P<kernel_version>.*)$'
+    pattern_legacy = r'kb-(?P<ctx>CTX[0-9]+)\-(?P<kernel_version>.*)$'
+    pattern = r'(?P<ticket>(\w)+\-[0-9]+)\-(?P<hotfix>(\w)+)\-(?P<kernel_version>.*)$'
 
     def __init__(self, dirloc):
         self.dirloc = dirloc
@@ -102,6 +103,13 @@ class DriverRepoPackage(object):
         # Parse directory name
         regex = re.compile(self.pattern)
         self.attrs = regex.match(self.dirname)
+
+        # Fall back to legacy mode if no match
+        if not self.attrs:
+            regex = re.compile(self.pattern_legacy)
+            self.attrs = regex.match(self.dirname)
+            if not self.attrs:
+                raise Exception("Error: could not match directory '%s' to known pattern" % self.dirname)
 
         # Find the ISO file in the driver repo
         iso_files = utils.find_files(self.dirloc, "*.iso")
@@ -152,9 +160,6 @@ class DriverRepoPackage(object):
 
     def get_zip(self):
         return self.zip_file
-
-    def get_ctx(self):
-        return self.attrs.group('ctx')
 
     def get_metadata_file(self):
         return self.metadata_file

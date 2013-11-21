@@ -195,9 +195,6 @@ class TestDriverRepoPackage(unittest.TestCase):
         # Check the total number of rpms is correct
         assert len(driver_rpms) + len(userspace_rpms) == len(rpm_names)
 
-    def test_verify_ctx_reference(self):
-        drp = models.DriverRepoPackage(self.directory)
-        assert_equal(self.sample_data['ctx'], drp.get_ctx())
 
 class TestDriverRepoPackageEmulex(TestDriverRepoPackage):
 
@@ -234,8 +231,23 @@ class TestDriverRepoPackageQla2xxx(TestDriverRepoPackage):
                                ]
                   }
 
+
+class TestDriverRepoPackageQla2xxxNewPackaging(TestDriverRepoPackage):
+    
+    sample_data = {"dir": "QL-196-GA-2.6.32.43-0.4.1.xs1.6.10.734.170748xen",
+                   "ctx": "",
+                   "kernel_version": "2.6.32.43-0.4.1.xs1.6.10.734.170748xen",
+                   "drivers": {'qla2xxx': "8.06.00.10.55.6_k-1"},
+                   "iso": "qla2xxx-8.06.00.10.55.6-k-GA.iso",
+                   "zip": "qla2xxx-8.06.00.10.55.6-k-GA.zip",
+                   "hotfix": "GA",
+                   "metadata_md5": "9110003b32fc8592f62f2292a9164d9d",
+                   "rpmdata": ['-rw-r--r-- 1 root root 244587 Nov 18 08:09 qla2xxx-modules-kdump-2.6.32.43-0.4.1.xs1.6.10.734.170748-8.06.00.10.55.6_k-1.i386.rpm',
+                               '-rw-r--r-- 1 root root 245258 Nov 18 08:09 qla2xxx-modules-xen-2.6.32.43-0.4.1.xs1.6.10.734.170748-8.06.00.10.55.6_k-1.i386.rpm'
+                               ]
+                  }
+
 if __name__ == '__main__':
     unittest.main()
-
 
 
