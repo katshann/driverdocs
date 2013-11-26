@@ -135,8 +135,8 @@ class TestDriverRepoPackage(unittest.TestCase):
         # Generate RPM Info Data
         rpminfo = '\n'.join(self.sample_data['rpmdata'])
     
-        utils.create_file(self.directory, "%s.iso" % self.base_filename, md5=True)
-        utils.create_file(self.directory, "%s.zip" % self.base_filename)
+        utils.create_file(self.directory, "%s.iso" % self.base_filename, checksums=['md5','sha256'])
+        utils.create_file(self.directory, "%s.zip" % self.base_filename, checksums=['md5','sha256'])
         utils.create_file(self.directory, "%s.rpminfo" % self.base_filename, data=rpminfo)
         utils.create_file(self.directory, "%s.metadata.md5" % self.base_filename, data=self.sample_data['metadata_md5'])
 
@@ -155,9 +155,17 @@ class TestDriverRepoPackage(unittest.TestCase):
         drp = models.DriverRepoPackage(self.directory)
         iso = drp.get_iso()
         fh = open(iso.get_loc())
-        truth_md5 = utils.md5_for_file(fh)
+        truth_md5 = utils.checksum_for_file(fh, 'md5')
         fh.close()
         assert_equal(truth_md5, iso.get_md5())
+
+    def test_get_iso_sha256(self):
+        drp = models.DriverRepoPackage(self.directory)
+        iso = drp.get_iso()
+        fh = open(iso.get_loc())
+        truth_sha256 = utils.checksum_for_file(fh, 'sha256')
+        fh.close()
+        assert_equal(truth_sha256, iso.get_sha256())
 
     def test_get_zip(self):
         drp = models.DriverRepoPackage(self.directory)

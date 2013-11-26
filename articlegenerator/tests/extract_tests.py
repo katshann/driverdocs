@@ -43,6 +43,7 @@ class DriverRepoDataSourceTests(unittest.TestCase):
                                 'fileloc': '/tmp/test.iso',
                                 'data': 'fasdadsfgag',
                                 'md5': 'md5summd5sum',
+                                'sha256': 'sha256sumasdf',
                                 'filesize': '12415',
                                },
                         'zip': {
@@ -50,6 +51,7 @@ class DriverRepoDataSourceTests(unittest.TestCase):
                                 'fileloc': '/tmp/test.zip',
                                 'data': 'dummydata',
                                 'md5': 'md5summd5sum1',
+                                'sha256': 'sha256sumasdf',
                                 'filesize': '59693',
                                },
                         'ctx': 'CTXTestNumber',

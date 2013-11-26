@@ -17,6 +17,9 @@ class MockFileObject(FileObject):
     def get_md5(self):
         return self.mock_rec['md5']
 
+    def get_sha256(self):
+        return self.mock_rec['sha256']
+
     def get_filesize(self):
         return self.mock_rec['filesize']
 

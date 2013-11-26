@@ -16,7 +16,7 @@ def create_temp_directory(dirname, base_dir="/tmp"):
     os.makedirs(full_path)
     return full_path
 
-def create_file(directory, filename, data=None, md5=False):
+def create_file(directory, filename, data=None, checksums=[]):
     file_loc = "%s/%s" % (directory, filename)
     file_h = open(file_loc, 'w')
     if data:
@@ -26,22 +26,25 @@ def create_file(directory, filename, data=None, md5=False):
     # Now open the file for reading
     file_h = open(file_loc, 'r')
     
-    if md5:
-        md5sum = md5_for_file(file_h)
-        fh = open("%s.md5" % file_loc, 'w')
-        fh.write("%s %s" % (file_loc, md5sum))
+    for checksum in checksums: 
+        csum = checksum_for_file(file_h, checksum)
+        fh = open("%s.%s" % (file_loc, checksum), 'w')
+        fh.write("%s %s" % (csum, file_loc))
         fh.close()
 
     file_h.close()
 
-def md5_for_file(f, block_size=2**20):
-    md5 = hashlib.md5()
+def checksum_for_file(f, checksum, block_size=2**20):
+    if checksum == 'md5':
+        csum = hashlib.md5()
+    if checksum == 'sha256':
+        csum = hashlib.sha256()
     while True:
         data = f.read(block_size)
         if not data:
             break
-        md5.update(data)
-    return md5.hexdigest()    
+        csum.update(data)
+    return csum.hexdigest()
 
 def make_local_call(call):
     process = subprocess.Popen(call, stdout=subprocess.PIPE)

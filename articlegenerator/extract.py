@@ -36,6 +36,7 @@ class DriverRepoDataSource(ArticleDataSource):
         data_rec['iso'] = {
                             'filename': iso.get_filename(),
                             'md5': iso.get_md5(),
+                            'sha256': iso.get_sha256(),
                           } 
                             
         # Get Zip file information
@@ -43,6 +44,7 @@ class DriverRepoDataSource(ArticleDataSource):
         data_rec['zip'] = {
                             'filename': zip_file.get_filename(),
                             'md5': zip_file.get_md5(),
+                            'sha256': zip_file.get_sha256(),
                           }
 
         # Get kernel version

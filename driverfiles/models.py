@@ -21,15 +21,30 @@ class FileObject(object):
     def get_contents(self):
         return utils.read_file(self.fileloc)
 
-    def get_md5(self):
+    def _get_checksum(self, checksum):
         fh = open(self.fileloc)
         try:
-            md5sum = utils.md5_for_file(fh)
+            csum = utils.checksum_for_file(fh, checksum)
             fh.close()
-            return md5sum
+
+            # Verify csum against value in csum file if exists
+            cfile_loc = "%s.%s" % (self.get_loc(), checksum)
+            if os.path.isfile(cfile_loc):
+                fh = open(cfile_loc)
+                data = fh.read()
+                fh.close()
+                assert csum in data
+
+            return csum
         except Exception, e:
             fh.close()
             raise e
+
+    def get_md5(self):
+        return self._get_checksum('md5')
+
+    def get_sha256(self):
+        return self._get_checksum('sha256')
 
     def get_filesize(self):
         return os.path.getsize(self.fileloc) 
