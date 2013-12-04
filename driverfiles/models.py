@@ -106,8 +106,11 @@ class DriverRepoPackage(object):
     for a particular driver disk spin in a driverdisks.hg
     package."""
 
-    pattern_legacy = r'kb-(?P<ctx>CTX[0-9]+)\-(?P<kernel_version>.*)$'
-    pattern = r'(?P<ticket>(\w)+\-[0-9]+)\-(?P<hotfix>(\w)+)\-(?P<kernel_version>.*)$'
+    patterns = [
+                 r'(?P<ticket>(\w)+\-[0-9]+)\-(?P<hotfix>(\w)+)\-(?P<kernel_version>.*)$',
+                 r'(?P<ctx>CTX[0-9]+)\-(?P<hotfix>(\w)+)\-(?P<kernel_version>.*)$',
+                 r'kb-(?P<ctx>CTX[0-9]+)\-(?P<kernel_version>.*)$',
+               ]
 
     def __init__(self, dirloc):
         self.dirloc = dirloc
@@ -116,15 +119,17 @@ class DriverRepoPackage(object):
         self.dirname = os.path.basename(self.dirloc)
 
         # Parse directory name
-        regex = re.compile(self.pattern)
-        self.attrs = regex.match(self.dirname)
-
-        # Fall back to legacy mode if no match
-        if not self.attrs:
-            regex = re.compile(self.pattern_legacy)
+        self.attrs = None
+        for pattern in self.patterns:
+            regex = re.compile(pattern)
             self.attrs = regex.match(self.dirname)
-            if not self.attrs:
-                raise Exception("Error: could not match directory '%s' to known pattern" % self.dirname)
+            if self.attrs:
+                # If we've found a match, go with that.
+                break
+
+        if not self.attrs:
+            # None of the dir patterns were matched.
+            raise Exception("Error: could not match directory '%s' to known pattern" % self.dirname)
 
         # Find the ISO file in the driver repo
         iso_files = utils.find_files(self.dirloc, "*.iso")
