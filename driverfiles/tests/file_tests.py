@@ -255,6 +255,29 @@ class TestDriverRepoPackageQla2xxxNewPackaging(TestDriverRepoPackage):
                                ]
                   }
 
+
+class TestDriverRepoPackageEmxSanibel(TestDriverRepoPackage):
+    
+    sample_data = {"dir": "CTX139408-GA-2.6.32.12-0.7.1.xs6.0.2.542.170665xen",
+                   "ctx": "CTX139408",
+                   "kernel_version": "2.6.32.12-0.7.1.xs6.0.2.542.170665xen",
+                   "drivers": {'lpfc': '8.3.7.33-1', 'be2net': '4.9.230.0-1'},
+                   "iso": "emulex-8.3.7.33-4.9.230.0-6.4.13.1-1-GA.iso",
+                   "zip": "emulex-8.3.7.33-4.9.230.0-6.4.13.1-1-GA.zip",
+                   "hotfix": "GA",
+                   "metadata_md5": "3be6ed9465c6a9e80e80e23775b1e465",
+                   "rpmdata": ['-rw-r--r-- 1 root root   56246 Nov  5 10:50 be2net-modules-kdump-2.6.32.12-0.7.1.xs6.0.2.542.170665-4.9.230.0-1.i386.rpm',
+                               '-rw-r--r-- 1 root root   56213 Nov  5 10:50 be2net-modules-xen-2.6.32.12-0.7.1.xs6.0.2.542.170665-4.9.230.0-1.i386.rpm',
+                               '-rw-r--r-- 1 root root 3334333 Oct 30 09:34 elxocmcore-6.4.13.1-1.i386.rpm',
+                               '-rw-r--r-- 1 root root  313344 Oct 30 09:34 elxocmcorelibs-6.4.13.1-1.i386.rpm',
+                               '-rw-r--r-- 1 root root    9274 Oct 30 09:34 elxocmlibhbaapi-6.4.13.1-1.i386.rpm',
+                               '-rw-r--r-- 1 root root  299793 Nov  5 10:51 lpfc-modules-kdump-2.6.32.12-0.7.1.xs6.0.2.542.170665-8.3.7.33-1.i386.rpm',
+                               '-rw-r--r-- 1 root root  299761 Nov  5 10:50 lpfc-modules-xen-2.6.32.12-0.7.1.xs6.0.2.542.170665-8.3.7.33-1.i386.rpm',
+                              ]
+    }
+
+
+
 if __name__ == '__main__':
     unittest.main()
 
