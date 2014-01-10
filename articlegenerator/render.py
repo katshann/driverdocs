@@ -21,11 +21,19 @@ article_data = {
                 'drivers': [
                               {'name': 'drivera', 'version': '2.1'},
                               {'name': 'driverb', 'version': '2.0'},
-                           ],   
-    
+                           ],
+
                 'rpms': [
-                            {'module_name':'rpm1', 'version': '1.0', 'file_name':'rpm1-test.rpm'},
-                            {'module_name':'rpm2', 'version': '2.0', 'file_name':'rpm2-test.rpm'},
+                            {
+                                'module_name':'rpm1',
+                                'version': '1.0',
+                                'file_name':'rpm1-test.rpm'
+                                },
+                            {
+                                'module_name':'rpm2',
+                                'version': '2.0',
+                                'file_name':'rpm2-test.rpm'
+                                },
 
                         ],
 
@@ -44,7 +52,7 @@ article_data = {
 
 
 
-print template.render(**article_data) 
+print template.render(**article_data)
 
 
 

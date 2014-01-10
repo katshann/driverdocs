@@ -1,7 +1,7 @@
 from driverfiles.models import *
 
 class MockFileObject(FileObject):
-    
+
     def __init__(self, rec):
         self.mock_rec = rec
 
@@ -28,7 +28,7 @@ class MockBinaryFile(MockFileObject):
     pass
 
 class MockUserspaceRPM(MockBinaryFile):
-    
+
     def get_name(self):
         return self.mock_rec['name']
 
@@ -40,7 +40,7 @@ class MockUserspaceRPM(MockBinaryFile):
 
 
 class MockDriverRPM(MockUserspaceRPM):
-    
+
     def get_kernel(self):
         return self.mock_rec['kernel']
 
@@ -52,19 +52,19 @@ class MockDriverISO(MockBinaryFile):
     pass
 
 class MockDriverRepoPackage(DriverRepoPackage):
-    
+
     def __init__(self, data):
         self.mock_rec = data
 
     def get_kernel_version(self):
         return self.mock_rec['kernel_version']
-        
+
     def get_iso(self):
         return MockDriverISO(self.mock_rec['iso'])
-        
+
     def get_zip(self):
         return MockBinaryFile(self.mock_rec['zip'])
-        
+
     def get_metadata_file(self):
         return MockBinaryFile(self.mock_rec['metadata_file'])
 

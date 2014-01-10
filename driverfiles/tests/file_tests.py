@@ -23,7 +23,7 @@ def assert_in(value, search_list):
 def assert_equal_len(lista, listb):
 
     if len(lista) != len(listb):
-        raise Exception("Assert Equal Len Fail: Lists were different sizes. (%d, %d) ('%s', '%s')" % (len(lista), len(listb), lista, listb))    
+        raise Exception("Assert Equal Len Fail: Lists were different sizes. (%d, %d) ('%s', '%s')" % (len(lista), len(listb), lista, listb))
 
 ##############################
 
@@ -32,6 +32,7 @@ class BinaryFileObjectsTests(unittest.TestCase):
     TEST_FILE = None
     RANDOM_DATA_SIZE = 100
     CREATED_FILES = []
+    md5_truth = None
 
     def setUp(self):
         self.FILENAME = "testbinaryfiles%s.txt" % utils.get_random_string(4)
@@ -56,10 +57,10 @@ class BinaryFileObjectsTests(unittest.TestCase):
         file_list = list(self.CREATED_FILES)
         file_list.append(filename)
         self.CREATED_FILES = file_list
-    
+
     def _generate_md5_file_for_binary(self):
         # Generate MD5 of binary file - use system call
-        call = ['/usr/bin/md5sum', self.TEST_FILE]
+        call = ['md5sum', self.TEST_FILE]
         self.md5_truth = utils.make_local_call(call).split()[0]
         fh = open("%s.md5" % self.TEST_FILE, 'w')
         fh.write(self.md5_truth)
@@ -79,10 +80,10 @@ class BinaryFileObjectsTests(unittest.TestCase):
         bf = models.BinaryFile(self.TEST_FILE)
         file_loc = bf.get_loc()
         assert_equal(self.TEST_FILE, file_loc)
-     
+
 
 class TestDriverRPMFileObjects(unittest.TestCase):
-    
+
     sample_data = {"file_loc": "bnx2x-modules-xen-2.6.32.12-0.7.1.xs6.0.2.542.170665-1.72.55-1.i386.rpm",
                    "driver": "bnx2x",
                    "driver_version": "1.72.55-1",
@@ -94,7 +95,7 @@ class TestDriverRPMFileObjects(unittest.TestCase):
     def setUp(self):
         # Create a dummy file object for testing with
         self.rpm = models.DriverRPM(self.sample_data['file_loc'])
-        
+
     def test_get_module(self):
         assert_equal(self.sample_data['driver'], self.rpm.get_name())
 
@@ -112,7 +113,7 @@ class TestDriverRPMFileObjects(unittest.TestCase):
 
 
 class TestDriverRepoPackage(unittest.TestCase):
-    
+
 
     sample_data = {"dir": "kb-CTX134278-2.6.32.12-0.7.1.xs6.0.2.553.170674xen",
                    "ctx": "CTX134278",
@@ -130,27 +131,27 @@ class TestDriverRepoPackage(unittest.TestCase):
         """Create a dummy directory for testing purposes"""
         self.directory = utils.create_temp_directory(self.sample_data['dir'])
 
-        self.base_filename = self.sample_data['iso'].replace('.iso','')
- 
+        self.base_filename = self.sample_data['iso'].replace('.iso', '')
+
         # Generate RPM Info Data
         rpminfo = '\n'.join(self.sample_data['rpmdata'])
-    
-        utils.create_file(self.directory, "%s.iso" % self.base_filename, checksums=['md5','sha256'])
-        utils.create_file(self.directory, "%s.zip" % self.base_filename, checksums=['md5','sha256'])
+
+        utils.create_file(self.directory, "%s.iso" % self.base_filename, checksums=['md5', 'sha256'])
+        utils.create_file(self.directory, "%s.zip" % self.base_filename, checksums=['md5', 'sha256'])
         utils.create_file(self.directory, "%s.rpminfo" % self.base_filename, data=rpminfo)
         utils.create_file(self.directory, "%s.metadata.md5" % self.base_filename, data=self.sample_data['metadata_md5'])
 
 
     def test_get_kernel_version(self):
         drp = models.DriverRepoPackage(self.directory)
-        kernel_ver = drp.get_kernel_version()        
+        kernel_ver = drp.get_kernel_version()
         assert_equal(self.sample_data['kernel_version'], kernel_ver)
-    
+
     def test_get_iso_name(self):
         drp = models.DriverRepoPackage(self.directory)
         iso = drp.get_iso()
         assert_equal(self.sample_data['iso'], iso.get_filename())
-        
+
     def test_get_iso_md5(self):
         drp = models.DriverRepoPackage(self.directory)
         iso = drp.get_iso()
@@ -171,12 +172,12 @@ class TestDriverRepoPackage(unittest.TestCase):
         drp = models.DriverRepoPackage(self.directory)
         zip_file = drp.get_zip()
         assert_equal(self.sample_data['zip'], zip_file.get_filename())
-    
+
     def test_get_metadata_md5(self):
         drp = models.DriverRepoPackage(self.directory)
         metadata_md5 = drp.get_metadata_file().get_contents()
         assert_equal(self.sample_data['metadata_md5'], metadata_md5)
-        
+
     def test_verify_driver_versions(self):
         drp = models.DriverRepoPackage(self.directory)
         drpms_all, _ = drp.get_rpms()
@@ -190,7 +191,7 @@ class TestDriverRepoPackage(unittest.TestCase):
     def test_verify_rpm_names(self):
         drp = models.DriverRepoPackage(self.directory)
         driver_rpms, userspace_rpms = drp.get_rpms()
-        
+
         # Define truth list
         rpm_names = [os.path.basename(rpm.split().pop()) for rpm in self.sample_data['rpmdata']]
 
@@ -241,7 +242,7 @@ class TestDriverRepoPackageQla2xxx(TestDriverRepoPackage):
 
 
 class TestDriverRepoPackageQla2xxxNewPackaging(TestDriverRepoPackage):
-    
+
     sample_data = {"dir": "QL-196-GA-2.6.32.43-0.4.1.xs1.6.10.734.170748xen",
                    "ctx": "",
                    "kernel_version": "2.6.32.43-0.4.1.xs1.6.10.734.170748xen",
@@ -257,7 +258,7 @@ class TestDriverRepoPackageQla2xxxNewPackaging(TestDriverRepoPackage):
 
 
 class TestDriverRepoPackageEmxSanibel(TestDriverRepoPackage):
-    
+
     sample_data = {"dir": "CTX139408-GA-2.6.32.12-0.7.1.xs6.0.2.542.170665xen",
                    "ctx": "CTX139408",
                    "kernel_version": "2.6.32.12-0.7.1.xs6.0.2.542.170665xen",

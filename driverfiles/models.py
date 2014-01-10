@@ -1,15 +1,14 @@
 #!/usr/bin/python
 
 import os
-import md5
-import utils
+from driverfiles import utils
 import re
 
 class FileObject(object):
     """Generic object representing a file"""
 
     def __init__(self, fileloc):
-        self.fileloc = fileloc        
+        self.fileloc = fileloc
 
     def get_filename(self):
         arr = os.path.split(self.fileloc)
@@ -47,7 +46,7 @@ class FileObject(object):
         return self._get_checksum('sha256')
 
     def get_filesize(self):
-        return os.path.getsize(self.fileloc) 
+        return os.path.getsize(self.fileloc)
 
 class BinaryFile(FileObject):
     """Generic object representing a binary file"""
@@ -68,12 +67,12 @@ class UserspaceRPM(BinaryFile):
 
             if match:
                 break
-            
+
         if not match:
             raise Exception("Error: could not match filename '%s' with regexs '%s'" % (fileloc, self.patterns))
 
         self.attrs = match
-        return super(UserspaceRPM, self).__init__(fileloc)
+        super(UserspaceRPM, self).__init__(fileloc)
 
     def get_name(self):
         return self.attrs.group('component_name')
@@ -169,10 +168,8 @@ class DriverRepoPackage(object):
         self.zip_file = FileObject(zip_files[0])
 
     def get_kernel_version(self):
-        """Return the kernel version for which the disk 
+        """Return the kernel version for which the disk
         was created"""
-        if not self.attrs.group('kernel_version'):
-            raise Exception("Error: cannot match directory '%s' against regex '%s'" % (self.dirname, pattern))
         return self.attrs.group('kernel_version')
 
     def get_iso(self):
@@ -196,7 +193,7 @@ class DriverRepoPackage(object):
 
             # Discriminate between RPMs based on whether its labelled like a driver module
             if '-modules-' in rpm_filename:
-                driver_rpms.append(DriverRPM(rpm_filename)) 
+                driver_rpms.append(DriverRPM(rpm_filename))
             else:
                 userspace_rpms.append(UserspaceRPM(rpm_filename))
         return driver_rpms, userspace_rpms
@@ -207,4 +204,4 @@ class DriverRepoPackage(object):
         driver_rpms, userspace_rpms = self.get_rpms()
         for rpm in driver_rpms + userspace_rpms:
             comps[rpm.get_name()] = rpm.get_version()
-        return comps 
+        return comps
