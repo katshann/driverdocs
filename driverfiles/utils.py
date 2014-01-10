@@ -16,7 +16,7 @@ def create_temp_directory(dirname, base_dir="/tmp"):
     os.makedirs(full_path)
     return full_path
 
-def create_file(directory, filename, data=None, checksums=[]):
+def create_file(directory, filename, data=None, checksums=None):
     file_loc = "%s/%s" % (directory, filename)
     file_h = open(file_loc, 'w')
     if data:
@@ -25,12 +25,13 @@ def create_file(directory, filename, data=None, checksums=[]):
 
     # Now open the file for reading
     file_h = open(file_loc, 'r')
-    
-    for checksum in checksums: 
-        csum = checksum_for_file(file_h, checksum)
-        fh = open("%s.%s" % (file_loc, checksum), 'w')
-        fh.write("%s %s" % (csum, file_loc))
-        fh.close()
+
+    if checksums:
+        for checksum in checksums:
+            csum = checksum_for_file(file_h, checksum)
+            fh = open("%s.%s" % (file_loc, checksum), 'w')
+            fh.write("%s %s" % (csum, file_loc))
+            fh.close()
 
     file_h.close()
 
@@ -76,6 +77,6 @@ def read_file(fileloc):
         raise e
 
 
-    
+
 
 

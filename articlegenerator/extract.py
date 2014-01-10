@@ -7,7 +7,7 @@ class ArticleDataSource(object):
     """A base class for obtaining data to fill out an article template"""
 
     data = {}
-    
+
     def __init__(self, data=None):
         if data:
             self.data = data
@@ -20,9 +20,10 @@ class ArticleDataSource(object):
         return ArticleDataSource(new_dict)
 
 class DriverRepoDataSource(ArticleDataSource):
-    
+
     def __init__(self, loc):
         self.loc = loc
+        super(DriverRepoDataSource, self).__init__()
 
     def get_inspector(self):
         return DriverRepoPackage(self.loc)
@@ -37,8 +38,8 @@ class DriverRepoDataSource(ArticleDataSource):
                             'filename': iso.get_filename(),
                             'md5': iso.get_md5(),
                             'sha256': iso.get_sha256(),
-                          } 
-                            
+                          }
+
         # Get Zip file information
         zip_file = drp.get_zip()
         data_rec['zip'] = {
@@ -78,7 +79,9 @@ class DriverRepoDataSource(ArticleDataSource):
         # Get driver information
         driver_data = []
 
-        for rpm in [rpm for rpm in driver_rpms if rpm.get_kernel() == "xen"]:
+        xen_rpms = []
+        xen_rpms = [rpm for rpm in driver_rpms if rpm.get_kernel() == "xen"]
+        for rpm in xen_rpms:
             driver_rec = {'name': rpm.get_name(), 'version': rpm.get_version()}
             driver_data.append(driver_rec)
 

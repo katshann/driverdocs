@@ -16,4 +16,4 @@ def assert_in(value, search_list):
 def assert_equal_len(lista, listb):
 
     if len(lista) != len(listb):
-        raise Exception("Assert Equal Len Fail: Lists were different sizes. (%d, %d) ('%s', '%s')" % (len(lista), len(listb), lista, listb))    
+        raise Exception("Assert Equal Len Fail: Lists were different sizes. (%d, %d) ('%s', '%s')" % (len(lista), len(listb), lista, listb))
