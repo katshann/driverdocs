@@ -8,5 +8,7 @@ setup(name='driverdocs',
       packages=find_packages(),
       package_data={'': ['*.html']},
       include_package_data=True,
-      install_requires=[],
+      install_requires=[
+        'jinja2',
+      ],
       )
