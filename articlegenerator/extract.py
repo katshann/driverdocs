@@ -82,7 +82,9 @@ class DriverRepoDataSource(ArticleDataSource):
         for rpm in driver_rpms:
 
             if 'get_modules' in dir(rpm):
-                xen_modules.append(rpm.get_modules())
+                for module in rpm.get_modules():
+                    xen_modules.append(module)
+
             elif rpm.get_kernel() == "xen":
                 rec = {"name": rpm.get_name(), "version": rpm.get_version()}
                 xen_modules.append(rec)
