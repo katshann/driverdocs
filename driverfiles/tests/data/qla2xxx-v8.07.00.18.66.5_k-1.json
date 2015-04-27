@@ -1,0 +1,42 @@
+{
+    "format_version": "0.1",
+    "iso": {
+        "filename": "qla2xxx.iso",
+        "md5": "55ac0c4ac3000bff1a1ff90b6d96e3b9",
+        "metadata": {
+            "filename": "qla2xxx.metadata.md5",
+            "contents": "c6716bff6c01740fd2191d48a56788a2"
+        },
+        "sha256": "339bbe7e064dd3ae5d07f9ba6078703664000c145c710b3b625f6586fa09f4d9"
+    },
+    "kernel_version": "3.10.0+2",
+    "rpms": [
+        {
+            "filename": "qla2xxx-modules-v8.07.00.18.66.5_k-1.x86_64.rpm",
+            "modules": [],
+            "name": "qla2xxx-modules",
+            "type": "kernel",
+            "version": "v8.07.00.18.66.5_k"
+        },
+        {
+            "filename": "qla2xxx-3.10.0+2-modules-v8.07.00.18.66.5_k-1.x86_64.rpm",
+            "modules": [
+                {
+                    "name": "qla2xxx",
+                    "version": "8.07.00.18.66.5-k"
+                },
+                {
+                    "name": "tcm_qla2xxx"
+                }
+            ],
+            "name": "qla2xxx-3.10.0+2-modules",
+            "type": "kernel",
+            "version": "v8.07.00.18.66.5_k"
+        }
+    ],
+    "zip": {
+        "filename": "qla2xxx-v8.07.00.18.66.5_k-1.zip",
+        "md5": "fe4aa428ec710e4cbaa3206e62985356",
+        "sha256": "30ba37f2ecb410877ac758b672b3951853941adc55d39a8d235d56c6b73bc9a8"
+    }
+}

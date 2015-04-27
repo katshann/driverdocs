@@ -1,0 +1,80 @@
+{
+    "format_version": "0.1",
+    "iso": 
+        {
+            "filename": "emulex-8.3.7.33-4.9.230.0-6.4.13.1-1-GA.iso",
+            "md5": "9110003b32fc8592f62f2292a9164d9d",
+            "sha256": "20c326976b5e53b7e028c25eebe24378",
+            "metadata":
+                {
+                    "md5": "..."
+                }
+        },
+    "zip": 
+        {
+            "filename": "emulex-8.3.7.33-4.9.230.0-6.4.13.1-1-GA.zip",
+            "md5": "...",
+            "sh256": "..."
+        },
+    "kernel_version": "2.6.32.12-0.7.1.xs6.0.2.542.170665",
+    "rpms":
+        [
+            {
+                "filename": "be2net-modules-kdump-2.6.32.12-0.7.1.xs6.0.2.542.170665-4.9.230.0-1.i386.rpm",
+                "type": "kernel",
+                "modules":
+                    [
+                        {
+                            "name": "be2net",
+                            "version": "4.9.230.0"
+                        }
+                    ]
+            },
+            {
+                "filename": "be2net-modules-xen-2.6.32.12-0.7.1.xs6.0.2.542.170665-4.9.230.0-1.i386.rpm",
+                "modules":
+                    [
+                        {
+                            "name": "be2net",
+                            "version": "4.9.230.0"
+                        }
+                    ]
+            },
+            {
+                "filename": "elxocmcore-6.4.13.1-1.i386.rpm",
+                "type": "userspace"
+            },
+            {
+                "filename": "elxocmcorelibs-6.4.13.1-1.i386.rpm",
+                "type": "userspace"
+            },
+            {
+                "filename": "elxocmlibhbaapi-6.4.13.1-1.i386.rpm",
+                "type": "userspace"
+            },
+            {
+                "filename": "lpfc-modules-kdump-2.6.32.12-0.7.1.xs6.0.2.542.170665-8.3.7.33-1.i386.rpm",
+                "type": "kernel",
+                "modules":
+                    [
+                        {
+                            "name": "lpfc",
+                            "version": "8.3.7.33"
+                        }
+                    ]
+            },
+            {
+                "filename": "lpfc-modules-xen-2.6.32.12-0.7.1.xs6.0.2.542.170665-8.3.7.33-1.i386.rpm",
+                "type": "kernel",
+                "modules":
+                    [
+                        {
+                            "name": "lpfc",
+                            "version": "8.3.7.33"
+                        }
+                    ]
+            }
+
+        ]
+
+}

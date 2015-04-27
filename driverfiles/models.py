@@ -3,6 +3,7 @@
 import os
 from driverfiles import utils
 import re
+import json
 
 class FileObject(object):
     """Generic object representing a file"""
@@ -47,6 +48,43 @@ class FileObject(object):
 
     def get_filesize(self):
         return os.path.getsize(self.fileloc)
+
+class FakeFileObject(object):
+
+    def __init__(self, data):
+        self.data = data
+
+    def get_filename(self):
+        return self.data["filename"]
+
+    def _get_checksum(self, checksum):
+        return self.data[checksum]
+
+    def get_contents(self):
+        return self.data["contents"]
+
+    def get_md5(self):
+        return self._get_checksum("md5")
+
+    def get_sha256(self):
+        return self._get_checksum("sha256")
+
+
+class FakeRPMObject(FakeFileObject):
+
+
+    def get_type(self):
+        return self.data["type"]
+
+    def get_modules(self):
+        return self.data["modules"]
+
+    def get_name(self):
+        return self.data["name"]
+
+    def get_version(self):
+        return self.data["version"]
+
 
 class BinaryFile(FileObject):
     """Generic object representing a binary file"""
@@ -111,11 +149,59 @@ class DriverRepoPackage(object):
                  r'kb-(?P<ctx>CTX[0-9]+)\-(?P<kernel_version>.*)$',
                ]
 
+
     def __init__(self, dirloc):
+        self.data = {}
         self.dirloc = dirloc
 
         # Obtain the dirname
         self.dirname = os.path.basename(self.dirloc)
+
+        if self.find_json_metadata():
+            self.data_load_from_json()
+        else:
+            self.legacy_data_load_from_files()
+
+    def find_json_metadata(self):
+        for f in os.listdir(self.dirloc):
+            if f.endswith(".json"):
+                return "%s/%s" % (self.dirloc, f)
+        return None
+
+    def data_load_from_json(self):
+        fh = open(self.find_json_metadata(), 'r')
+        json_data = fh.read()
+        fh.close()
+
+        jdata = json.loads(json_data)
+
+        self.data["kernel_version"] = jdata["kernel_version"]
+
+        driver_iso = FakeFileObject(jdata["iso"])
+        self.data["driver_iso"] = driver_iso
+
+        zip_file = FakeFileObject(jdata["zip"])
+        self.data["zip_file"] = zip_file
+
+        metadata_file = FakeFileObject(jdata["iso"]["metadata"])
+        self.data["metadata_file"] = metadata_file
+
+        driver_rpms = []
+        userspace_rpms = []
+
+        for rpm in jdata["rpms"]:
+
+            rpm_file = FakeRPMObject(rpm)
+
+            if rpm["type"] == "kernel":
+                driver_rpms.append(rpm_file)
+            else:
+                userspace_rpms.append(rpm_file)
+
+        self.data["driver_rpms"] = driver_rpms
+        self.data["userspace_rpms"] = userspace_rpms
+
+    def legacy_data_load_from_files(self):
 
         # Parse directory name
         self.attrs = None
@@ -137,7 +223,7 @@ class DriverRepoPackage(object):
         if not iso_files:
             raise Exception("Error: could not find any ISOs in directory %s" % self.dirloc)
 
-        self.driver_iso = DriverISO(iso_files[0])
+        self.data["driver_iso"] = DriverISO(iso_files[0])
 
         # Find the repo metadata file
         metadata_files = utils.find_files(self.dirloc, "*.metadata.md5")
@@ -147,7 +233,7 @@ class DriverRepoPackage(object):
         if not metadata_files:
             raise Exception("Error: could not find any metadata files")
 
-        self.metadata_file = FileObject(metadata_files[0])
+        self.data["metadata_file"] = FileObject(metadata_files[0])
 
         # Find RPM info file
         rpminfo_files = utils.find_files(self.dirloc, "*.rpminfo")
@@ -156,7 +242,7 @@ class DriverRepoPackage(object):
         if not rpminfo_files:
             raise Exception("Error: could not find any rpminfo files")
 
-        self.rpminfo_file = FileObject(rpminfo_files[0])
+        rpminfo_file = FileObject(rpminfo_files[0])
 
         # Find the ZIP file
         zip_files = utils.find_files(self.dirloc, "*.zip")
@@ -164,27 +250,16 @@ class DriverRepoPackage(object):
             raise Exception("Error: more than on zip fil returned! (%s)" % zip_files)
         if not zip_files:
             raise Exception("Error: could not find any zip files")
+        self.data["zip_files"] = zip_files
 
-        self.zip_file = FileObject(zip_files[0])
+        self.data["zip_file"] = FileObject(zip_files[0])
 
-    def get_kernel_version(self):
-        """Return the kernel version for which the disk
-        was created"""
-        return self.attrs.group('kernel_version')
+        self.data['kernel_version'] = self.attrs.group('kernel_version')
 
-    def get_iso(self):
-        return self.driver_iso
-
-    def get_zip(self):
-        return self.zip_file
-
-    def get_metadata_file(self):
-        return self.metadata_file
-
-    def get_rpms(self):
+        # Initialise RPMs
         driver_rpms = []
         userspace_rpms = []
-        for line in self.rpminfo_file.get_contents().split('\n'):
+        for line in rpminfo_file.get_contents().split('\n'):
             arr = line.split()
             if not arr:
                 #Empty line, skip
@@ -196,7 +271,26 @@ class DriverRepoPackage(object):
                 driver_rpms.append(DriverRPM(rpm_filename))
             else:
                 userspace_rpms.append(UserspaceRPM(rpm_filename))
-        return driver_rpms, userspace_rpms
+
+        self.data["driver_rpms"] = driver_rpms
+        self.data["userspace_rpms"] = userspace_rpms
+
+    def get_kernel_version(self):
+        """Return the kernel version for which the disk
+        was created"""
+        return self.data["kernel_version"]
+
+    def get_iso(self):
+        return self.data["driver_iso"]
+
+    def get_zip(self):
+        return self.data["zip_file"]
+
+    def get_metadata_file(self):
+        return self.data["metadata_file"]
+
+    def get_rpms(self):
+        return self.data["driver_rpms"], self.data["userspace_rpms"]
 
 
     def get_components(self):

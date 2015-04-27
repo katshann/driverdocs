@@ -77,15 +77,20 @@ class DriverRepoDataSource(ArticleDataSource):
         data_rec['rpms'] = rpm_data
 
         # Get driver information
-        driver_data = []
+        xen_modules = []
 
-        xen_rpms = []
-        xen_rpms = [rpm for rpm in driver_rpms if rpm.get_kernel() == "xen"]
-        for rpm in xen_rpms:
-            driver_rec = {'name': rpm.get_name(), 'version': rpm.get_version()}
-            driver_data.append(driver_rec)
+        for rpm in driver_rpms:
 
-        data_rec['drivers'] = driver_data
+            if 'get_modules' in dir(rpm):
+                xen_modules.append(rpm.get_modules())
+            elif rpm.get_kernel() == "xen":
+                rec = {"name": rpm.get_name(), "version": rpm.get_version()}
+                xen_modules.append(rec)
+            else:
+                # Ignore
+                pass
+
+        data_rec['drivers'] = xen_modules
 
         self.data = data_rec
 
